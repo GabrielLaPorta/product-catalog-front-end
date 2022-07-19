@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { useRoutes, BrowserRouter } from "react-router-dom";
+import PrivateRoute from './components/private-route'
+import NotFount from './components/not-found'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { history } from './history'
+import Login from './pages/login/login'
+import Home from './pages/home/home'
+import Products from './pages/admin/products/products';
+import ProductForm from './pages/admin/products/product-form';
+
+const MyRoutes = (props) => {
+  let routes = useRoutes([
+    { index: true, element: <Home />},
+    { path: "/login", element: <Login  />},
+    { path: "/home", element:<Home />},
+    { path: "/admin", element: <PrivateRoute /> , 
+      children:[
+        {path: "/admin/home", element:<Home />},
+        {path: "/admin/products", element:<Products />},
+        {path: "/admin/products/form", element:<ProductForm />}
+      ],
+    },
+    { path: "*", element: <NotFount /> },
+  ]);
+  return routes;
+};
+
+const App = () => {
+    return (
+      <main className="App">
+        <BrowserRouter history={history} forceRefresh={true}>
+          <MyRoutes/>
+        </BrowserRouter>
+      </main>
+    )
 }
 
 export default App;

@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.footer {
+  background-color: black;
+  color: white;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  margin-bottom: 0px;
+}
