@@ -27,7 +27,8 @@ const useStyles = makeStyles({
     width: "100%"
   },
   actions: {
-    alignItems: "bottom"
+    margin: "auto",
+    align: "center"
   }
 });
 

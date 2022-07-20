@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Menu from '../../../components/menu';
 import Footer from '../../../components/footer';
 import { Grid } from "@material-ui/core";
@@ -16,12 +16,12 @@ class ProductForm extends React.Component {
             price: null,
             categoryId: null,
             image: null,
+            imageUrl: null,
             categories: []
         };
   
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.navigate = useNavigate;
     }
 
     async componentWillMount() {
@@ -36,6 +36,24 @@ class ProductForm extends React.Component {
         }).catch((error) => {
             console.log(error)
         });
+        if(this.props.params.id){
+            axios.get(`${process.env.REACT_APP_API_URL}/product/${this.props.params.id}`,  {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('app-token'),
+                }
+            }).then((response) => {
+                const { data } = response;
+                this.setState({
+                    name: data.name,
+                    description: data.description,
+                    price: data.price,
+                    categoryId: data.category_id,
+                    imageUrl: data.image_url,
+                });
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
     }
   
     handleInputChange(event) {
@@ -52,48 +70,75 @@ class ProductForm extends React.Component {
         event.preventDefault();
         let imageUrl;
         try {
-            const formData = new FormData();
-
-            formData.append("image", this.state.image, this.state.image.name);
-
-            await axios.post(`${process.env.REACT_APP_API_URL}/product/upload-image`,formData, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('app-token'),
-                    'Content-Type': 'multipart/form-data'
+            if(this.state.image){
+                const formData = new FormData();
+    
+                formData.append("image", this.state.image, this.state.image.name);
+                await axios.post(`${process.env.REACT_APP_API_URL}/product/upload-image`,formData, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('app-token'),
+                        'Content-Type': 'multipart/form-data'
+                    }
                 }
-            }
-            ).then((response) => {
-                const {data} = response;
-                if(data.imageUrl){
-                    imageUrl = data.imageUrl;
-                }
-            }).catch((error) => {
-                console.log(error);
-                throw error;
-            });
-
-            await axios.post(`${process.env.REACT_APP_API_URL}/product`, {
-                name: this.state.name,
-                description: this.state.description,
-                price: this.state.price,
-                imageUrl: imageUrl,
-                categoryId: this.state.categoryId
-            }, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('app-token')
-                }
-            }).then((response) => {
-                this.setState({
-                    name: '',
-                    description: '',
-                    price: null,
-                    categoryId: null,
-                    image: null,
+                ).then((response) => {
+                    const {data} = response;
+                    if(data.imageUrl){
+                        imageUrl = data.imageUrl;
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    throw error;
                 });
-            }).catch((error) => {
-                console.log(error)
-                throw error;
-            });
+            }
+            if(this.props.params.id){
+                await axios.put(`${process.env.REACT_APP_API_URL}/product/${this.props.params.id}`, {
+                    name: this.state.name,
+                    description: this.state.description,
+                    price: this.state.price,
+                    imageUrl: imageUrl ?? this.state.imageUrl,
+                    categoryId: this.state.categoryId
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('app-token')
+                    }
+                }).then((response) => {
+                    this.setState({
+                        name: '',
+                        description: '',
+                        price: null,
+                        categoryId: null,
+                        image: null,
+                    });
+                    this.props.navigate("/admin/products");
+                }).catch((error) => {
+                    console.log(error)
+                    throw error;
+                });
+            } else {
+                await axios.post(`${process.env.REACT_APP_API_URL}/product`, {
+                    name: this.state.name,
+                    description: this.state.description,
+                    price: this.state.price,
+                    imageUrl: imageUrl,
+                    categoryId: this.state.categoryId
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('app-token')
+                    }
+                }).then((response) => {
+                    this.setState({
+                        name: '',
+                        description: '',
+                        price: null,
+                        categoryId: null,
+                        image: null,
+                    });
+                    this.props.navigate("/admin/products");
+                }).catch((error) => {
+                    console.log(error)
+                    throw error;
+                });
+            }
         } catch (error) {
             console.log(error)
         }
@@ -109,6 +154,10 @@ class ProductForm extends React.Component {
                 justifyContent="center"
                 alignItems="center">
                 <h1>Produto</h1>
+                {this.state.imageUrl && 
+                    <img src={this.state.imageUrl} alt="imagem do produto" style={{height: "250px"}}/>
+                }
+                <br/>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Nome:
@@ -153,7 +202,10 @@ class ProductForm extends React.Component {
                             }
                         </select>
                     </label>
-                    <input name="image" type="file" onChange={this.handleInputChange} className="Form-Field" required/>
+                    {!this.state.imageUrl ?
+                        <input name="image" type="file" onChange={this.handleInputChange} className="Form-Field" required/>
+                        : <input name="image" type="file" onChange={this.handleInputChange} className="Form-Field"/>
+                    }
                     <br/>
                     <input type="submit" value="Salvar" className="Form-Btn"/>
                 </form>
@@ -165,4 +217,10 @@ class ProductForm extends React.Component {
     }
   }
 
-export default ProductForm;
+function ProductFormWithNavigate(props) {
+    let navigate = useNavigate();
+    let params = useParams();
+    return <ProductForm {...props} navigate={navigate} params={params}/>
+}
+
+export default ProductFormWithNavigate;

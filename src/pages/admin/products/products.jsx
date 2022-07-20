@@ -33,7 +33,6 @@ const Products = () => {
             }
             }).then((response) => {
                 const { data } = response;
-                console.log(data)
                 if (data) {
                     setProducts(data);
                 }
@@ -48,9 +47,7 @@ const Products = () => {
                 'Authorization': 'Bearer ' + localStorage.getItem('app-token'),
             }
             }).then((response) => {
-                const { data } = response;
-                console.log(data)
-                navigator("/admin/products")
+                loadProducts();
             }).catch((error) => {
                 console.log(error)
             })
@@ -104,7 +101,7 @@ const Products = () => {
                                         }
                                         />
                                         <ListItemButton style={{backgroundColor: "#ffffff"}} >
-                                            <Button onClick={()=> navigate({pathname:"/admin/products/form", state: product})}>
+                                            <Button onClick={()=> navigate({pathname:`/admin/products/form/${product.id}`})}>
                                                 <Edit sx={{ color: "#0060a1" }}/>
                                             </Button>
                                         </ListItemButton>

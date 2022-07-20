@@ -8,7 +8,7 @@ import { history } from './history'
 import Login from './pages/login/login'
 import Home from './pages/home/home'
 import Products from './pages/admin/products/products';
-import ProductForm from './pages/admin/products/product-form';
+import ProductFormWithNavigate from './pages/admin/products/product-form';
 
 const MyRoutes = (props) => {
   let routes = useRoutes([
@@ -19,7 +19,8 @@ const MyRoutes = (props) => {
       children:[
         {path: "/admin/home", element:<Home {...props}/>},
         {path: "/admin/products", element:<Products {...props}/>},
-        {path: "/admin/products/form", element:<ProductForm {...props}/>}
+        {path: "/admin/products/form", element:<ProductFormWithNavigate {...props}/>},
+        {path: "/admin/products/form/:id", element:<ProductFormWithNavigate {...props}/>}
       ],
     },
     { path: "*", element: <NotFount /> },
@@ -27,11 +28,11 @@ const MyRoutes = (props) => {
   return routes;
 };
 
-const App = () => {
+const App = (props) => {
     return (
       <main className="App">
         <BrowserRouter history={history} forceRefresh={true}>
-          <MyRoutes/>
+          <MyRoutes {...props}/>
         </BrowserRouter>
       </main>
     )
