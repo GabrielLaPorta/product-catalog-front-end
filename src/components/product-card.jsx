@@ -27,8 +27,8 @@ const useStyles = makeStyles({
     width: "100%"
   },
   actions: {
-    margin: "auto",
-    align: "center"
+    marginLeft: "33%",
+    fontSize: "x-large",
   }
 });
 
