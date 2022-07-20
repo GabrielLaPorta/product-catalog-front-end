@@ -2,7 +2,7 @@
     border: none;
     background-color: rgba(255, 255, 255, 0.863);
     color: #000000;
-    margin-top: 1rem;
+    margin-bottom: 10px;
     padding: 1rem;
     font-size: 1.2rem;
     border-radius: 7px;
@@ -10,8 +10,21 @@
     transition: all .1s linear;
 }
 
-.Form {
+.Form-Label {
+    border: none;
+    background-color: rgba(255, 255, 255, 0.863);
+    color: #1d1d1d;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-radius: 7px;
     width: 100%;
+    text-align: left;
+}
+
+.Form {
+    width: 50%;
+    margin: auto;
 }
 
 .Form-Field:focus {
@@ -35,6 +48,7 @@
     border: none;
     border-radius: 5px;
     margin-top: 2rem;
+    margin-bottom: 5rem;
 }
 
 .Form-Btn:hover {

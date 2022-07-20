@@ -3,6 +3,7 @@ import axios from "axios";
 import ProductCard from "../../components/product-card";
 import Menu from '../../components/menu';
 import Footer from '../../components/footer';
+import { Grid } from "@material-ui/core";
 
 function ProductsList(){   
     const [products, setProducts] = useState([]);
@@ -28,7 +29,12 @@ function Home() {
     return (
         <>
             <Menu />
-            <ProductsList/>
+            <Grid
+                container
+                justifyContent="center"
+                alignItems="center">
+                <ProductsList/>
+            </Grid>
             <Footer/>
         </>
     )

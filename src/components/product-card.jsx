@@ -17,14 +17,17 @@ const useStyles = makeStyles({
     },
   },
   root: {
-    width: "20%",
-    height: "350px",
+    width: "300px",
+    height: "400px",
     float: "left",
     margin: "10px"
   },
   media: {
     height: "200px",
     width: "100%"
+  },
+  actions: {
+    alignItems: "bottom"
   }
 });
 
@@ -47,7 +50,7 @@ export default function ProductCard(props) {
             {props.description}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions className={classes.actions}>
           R$ {props.price}
         </CardActions>
       </Card>

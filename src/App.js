@@ -12,14 +12,14 @@ import ProductForm from './pages/admin/products/product-form';
 
 const MyRoutes = (props) => {
   let routes = useRoutes([
-    { index: true, element: <Home />},
-    { path: "/login", element: <Login  />},
-    { path: "/home", element:<Home />},
-    { path: "/admin", element: <PrivateRoute /> , 
+    { index: true, element: <Home {...props}/>},
+    { path: "/login", element: <Login  {...props}/>},
+    { path: "/home", element:<Home {...props}/>},
+    { path: "/admin", element: <PrivateRoute {...props}/> , 
       children:[
-        {path: "/admin/home", element:<Home />},
-        {path: "/admin/products", element:<Products />},
-        {path: "/admin/products/form", element:<ProductForm />}
+        {path: "/admin/home", element:<Home {...props}/>},
+        {path: "/admin/products", element:<Products {...props}/>},
+        {path: "/admin/products/form", element:<ProductForm {...props}/>}
       ],
     },
     { path: "*", element: <NotFount /> },
